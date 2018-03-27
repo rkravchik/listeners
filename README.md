@@ -50,3 +50,27 @@ Simple usage example:
         err = http.Serve(listeners.TCPKeepAliveListener{TCPListener: l})
         // ...
     }
+
+## DoListener
+
+DoListener is a net.TCPListener with keep-alive timeouts and ability to execute the given func on first accept being called.
+Use it like:
+
+    package main
+         
+    import "github.com/rkravchik/listeners"
+     
+    func main() {
+        // ...
+        addr, err := net.ResolveTCPAddr("tcp", address)
+        if err != nil {
+            // ...
+        }
+        l, err := net.ListenTCP("tcp", addr)
+        if err != nil {
+            // ...
+        }
+        dl := NewDoListener(l).OnFirstAcceptDo(func() {fmt.Println("i'm ready to accept")})
+        err = http.Serve(dl)
+        // ...
+    }
